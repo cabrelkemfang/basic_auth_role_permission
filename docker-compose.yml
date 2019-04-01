@@ -1,0 +1,49 @@
+version : '3'
+
+services:
+  mysql:
+    container_name: mysql
+    hostname: mysql
+    image:  mysql:latest
+    networks:
+      - custom_network
+    restart: always
+    ports:
+      - 3306:3306
+    environment: 
+    - MYSQL_ROOT_PASSWORD=mysql
+    - MYSQL_DATABASE=user
+    - MYSQL_ROOT_HOST='%'
+    healthcheck:
+      test: mysqladmin -uroot -pmysql ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  spring-boot-jpa-app:
+    build: spring-jpa-jpa
+      context: ./
+      dockerfile: Dockerfile
+    container_name: basic-poc
+    hostname: basic-poc
+    image: office:SNAPSHOT
+    networks:
+      - custom_network
+    restart: always
+    ports:
+      - 8080:8080
+    
+    healthcheck:
+      test: ["CMD-SHELL", "curl -i http://localhost:8080 2>&1 | grep -c -e '404 Not Found'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      mysql:
+        condition: service_healthy
+  
+ 
+networks:
+  custom_network:
+    driver: bridge
+    name: local_networkse

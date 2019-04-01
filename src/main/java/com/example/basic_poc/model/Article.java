@@ -3,7 +3,7 @@ package com.example.basic_poc.model;
 import javax.persistence.*;
 
 @Entity
-public class Article {
+public class Article extends AuditModel{
 
   @Id
   @GeneratedValue(strategy= GenerationType.AUTO)
