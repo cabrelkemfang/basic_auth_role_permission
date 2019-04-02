@@ -1,26 +1,35 @@
 package com.example.basic_poc.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
+@ApiModel(description = "All details about the User. ")
 public class User  {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column
+  @ApiModelProperty(notes = "The database generated user ID")
   private Long id;
 
   @Column(name = "first_name")
+  @ApiModelProperty(notes = "The User first name")
   private String firstName;
 
   @Column(name = "last_name")
+  @ApiModelProperty(notes = "The User last name")
   private String lastName;
 
   @Column(name = "email")
+  @ApiModelProperty(notes = "The User email")
   private String email;
 
   @Column(name = "password")
+  @ApiModelProperty(notes = "The User password")
   private String password;
 
   @ManyToMany(fetch = FetchType.EAGER,cascade = {
@@ -33,6 +42,7 @@ public class User  {
                   name = "user_id", referencedColumnName = "id"),
           inverseJoinColumns = @JoinColumn(
                   name = "role_id", referencedColumnName = "id"))
+  @ApiModelProperty(notes = "The User roles")
   private Collection<Role> roles;
 
   public User() {
